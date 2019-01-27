@@ -91,6 +91,7 @@
     
     int strip_count_flash = 1 ;
     int strip_count = 0;
+    int strip_count_switch_led_effect = 0;
 
     int blue_wanted_strip_1 = true;
     int blue_wanted_strip_2 = true;
@@ -138,25 +139,73 @@
     int run_5_check = 0;
     int run_6_check = 0;
     
+    int pin_selector_red = 0;
+    int pin_selector_blue = 0;
+    int pin_selector_green = 0;
+
     
  
        
   void led_script_effect(bool red_wanted, bool green_wanted , bool blue_wanted, int cycle_time_1_led , int cycle_time_2_led, int cycle_time_3_led, int cycle_time_4_led, int cycle_time_5_led, int cycle_time_6_led){
     int r,g,b ; 
     unsigned long current_time = (millis ()) ;
+    Serial.println("strip_count_switch_led_effect");
+    Serial.println(strip_count_switch_led_effect); //<--- 7000
     
-
+//    if (strip_count_switch_led_effect = 1){
+//      pin_selector_red = redpin_strip_1;
+//      pin_selector_blue = greenpin_strip_1;
+//      pin_selector_green = bluepin_strip_1;
+//      
+//    }
+//    if (strip_count_switch_led_effect = 2){
+//     pin_selector_red = redpin_strip_2;
+//      pin_selector_blue = greenpin_strip_2;
+//      pin_selector_green = bluepin_strip_2;
+//      
+//    }    
+//    if (strip_count_switch_led_effect = 3){
+//      pin_selector_red = redpin_strip_3;
+//      pin_selector_blue = greenpin_strip_3;
+//      pin_selector_green = bluepin_strip_3;
+      
+//    }
+    if (strip_count_switch_led_effect = 4){
+      pin_selector_red = redpin_strip_4;
+      pin_selector_blue = greenpin_strip_4;
+      pin_selector_green = bluepin_strip_4;
+      
+    }
+    
     if(red_wanted == true && green_wanted == true && blue_wanted == true){
     
        // fade from blue to violet
       if (current_time - previous_time >= cycle_time_1_led && run_1_check == 0){
         for (int r = 0; r < 256; r++) { 
+          
+          if (strip_count_switch_led_effect = 1){
             analogWrite(redpin_strip_1, r);
+            Serial.print("TEST 1");
+          }
+          
+          if (strip_count_switch_led_effect = 2){
+            analogWrite(redpin_strip_2, r);
+            Serial.print("TEST 2");
+          }
+          
+          if (strip_count_switch_led_effect = 3){
+            analogWrite(redpin_strip_3, r);
+            Serial.print("TEST 3");
+          }
+          
+          if (strip_count_switch_led_effect = 4){
+            analogWrite(redpin_strip_4, r);
+            Serial.print("TEST 4");
+          }
+          
           previous_time = current_time; // <-- Store Current Time
           run_1_check = 1;
-          Serial.println("red is outputting : ");
-          Serial.println (r); 
-          Serial.println(redpin_strip_1);
+          //Serial.println("red is outputting : ");
         }
       }    
 
@@ -164,7 +213,7 @@
       
       // fade from violet to red
         for (b = 255; b > 0; b--) { 
-          analogWrite(bluepin_strip_1, b);
+          analogWrite(pin_selector_blue, b);
           previous_time_2 = current_time ;
           run_2_check = 1;
         } 
@@ -173,7 +222,7 @@
       
       // fade from red to yellow
         for (g = 0; g < 256; g++) { 
-          analogWrite(greenpin_strip_1, g);
+          analogWrite(pin_selector_green, g);
           previous_time_3 = current_time ;
           run_3_check = 1;
         } 
@@ -182,7 +231,7 @@
       if (current_time - previous_time_4 >= cycle_time_4_led && run_4_check == 0){
       // fade from yellow to green
         for (r = 255; r > 0; r--) { 
-          analogWrite(redpin_strip_1, r);
+          analogWrite(pin_selector_red, r);
           previous_time_4 = current_time;
           run_4_check = 1;
         }
@@ -191,7 +240,7 @@
       if (current_time - previous_time_5 >= cycle_time_5_led && run_5_check == 0){
         // fade from green to teal
         for (b = 0; b < 256; b++) { 
-          analogWrite(bluepin_strip_1, b);
+          analogWrite(pin_selector_blue, b);
           previous_time_5 = current_time;
           run_5_check = 1;
         }  
@@ -199,7 +248,7 @@
       if (current_time - previous_time_6 >= cycle_time_6_led && run_6_check == 0){
         // fade from teal to blue
         for (g = 255; g > 0; g--) { 
-          analogWrite(greenpin_strip_1, g);
+          analogWrite(pin_selector_green, g);
           previous_time_6 = current_time;
           run_6_check = 1;
           
@@ -359,6 +408,10 @@
       run_4_check == 0;
       run_5_check == 0;
       run_6_check == 0;
+
+      strip_count_switch = 0;
+      //Serial.println("strip count in loop");
+      //Serial.println(strip_count_switch);
      
       
       //Serial.print("Cycle 1 time:  ");
@@ -481,11 +534,31 @@
                                               
         }
 
-      if (current_time - previous_time_led_script >= cycle_total_time){      
-        led_script_effect(red_wanted = red_wanted_strip_1, green_wanted = green_wanted_strip_1, blue_wanted = blue_wanted_strip_1,cycle_time_1_led = cycle_time_1, cycle_time_2_led = cycle_time_2, cycle_time_3_led = cycle_time_3 ,cycle_time_4_led = cycle_time_4, cycle_time_5_led = cycle_time_5 ,cycle_time_6_led = cycle_time_6 );// Call first Led Strip <-- Has to be at the end for all the settings to work :)
-        led_script_effect(red_wanted = red_wanted_strip_2, green_wanted = green_wanted_strip_2, blue_wanted = blue_wanted_strip_2,cycle_time_1_led = cycle_time_1, cycle_time_2_led = cycle_time_2, cycle_time_3_led = cycle_time_3 ,cycle_time_4_led = cycle_time_4, cycle_time_5_led = cycle_time_5 ,cycle_time_6_led = cycle_time_6 );
-        led_script_effect(red_wanted = red_wanted_strip_3, green_wanted = green_wanted_strip_3, blue_wanted = blue_wanted_strip_3,cycle_time_1_led = cycle_time_1, cycle_time_2_led = cycle_time_2, cycle_time_3_led = cycle_time_3 ,cycle_time_4_led = cycle_time_4, cycle_time_5_led = cycle_time_5 ,cycle_time_6_led = cycle_time_6 );
-        led_script_effect(red_wanted = red_wanted_strip_4, green_wanted = green_wanted_strip_4, blue_wanted = blue_wanted_strip_4,cycle_time_1_led = cycle_time_1, cycle_time_2_led = cycle_time_2, cycle_time_3_led = cycle_time_3 ,cycle_time_4_led = cycle_time_4, cycle_time_5_led = cycle_time_5 ,cycle_time_6_led = cycle_time_6 );
+      if (current_time - previous_time_led_script >= cycle_total_time){
+        strip_count_switch_led_effect  = 1;
+        //Serial.println("light Display Values");
+        //Serial.println(strip_count_switch_led_effect);     
+        
+        led_script_effect(red_wanted = red_wanted_strip_1, green_wanted = green_wanted_strip_1, blue_wanted = blue_wanted_strip_1, cycle_time_1_led = cycle_time_1, cycle_time_2_led = cycle_time_2, cycle_time_3_led = cycle_time_3 ,cycle_time_4_led = cycle_time_4, cycle_time_5_led = cycle_time_5 ,cycle_time_6_led = cycle_time_6 );// Call first Led Strip <-- Has to be at the end for all the settings to work :)
+        
+        strip_count_switch_led_effect  = 2;
+        //Serial.println(strip_count_switch_led_effect);           
+        
+        led_script_effect(red_wanted = red_wanted_strip_1, green_wanted = green_wanted_strip_1, blue_wanted = blue_wanted_strip_1, cycle_time_1_led = cycle_time_1, cycle_time_2_led = cycle_time_2, cycle_time_3_led = cycle_time_3 ,cycle_time_4_led = cycle_time_4, cycle_time_5_led = cycle_time_5 ,cycle_time_6_led = cycle_time_6 );
+        
+        strip_count_switch_led_effect  = 3;
+        //Serial.println(strip_count_switch_led_effect);   
+        
+        led_script_effect(red_wanted = red_wanted_strip_1, green_wanted = green_wanted_strip_1, blue_wanted = blue_wanted_strip_1, cycle_time_1_led = cycle_time_1, cycle_time_2_led = cycle_time_2, cycle_time_3_led = cycle_time_3 ,cycle_time_4_led = cycle_time_4, cycle_time_5_led = cycle_time_5 ,cycle_time_6_led = cycle_time_6 );
+        
+        strip_count_switch_led_effect  = 4;
+        //Serial.println(strip_count_switch_led_effect);           
+        
+        led_script_effect(red_wanted = red_wanted_strip_1, green_wanted = green_wanted_strip_1, blue_wanted = blue_wanted_strip_1, cycle_time_1_led = cycle_time_1, cycle_time_2_led = cycle_time_2, cycle_time_3_led = cycle_time_3 ,cycle_time_4_led = cycle_time_4, cycle_time_5_led = cycle_time_5 ,cycle_time_6_led = cycle_time_6 );
+        
+        strip_count_switch_led_effect  = 5;
+        //Serial.println(strip_count_switch_led_effect);   
+        
         previous_time_led_script = current_time;
       }
       } 
